@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "cp_and_chmod running"
 echo "coping myLed to /usr/local/bin/"
-cp myLed /usr/local/bin/
-config-pin -a p8.16 out
+cp myLed.cgi /usr/local/bin/
+config-pin -a p9.12 out
 echo "coping cgi file to /usr/lib/cgi-bin"
 cp myLed.cgi /usr/lib/cgi-bin
 echo "copied"

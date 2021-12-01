@@ -5,18 +5,19 @@
 #include <cgicc/CgiDefs.h>
 #include <cgicc/HTTPHTMLHeader.h>
 #include <cgicc/HTMLClasses.h>
+#include <unistd.h> //for usleep
 #include "GPIO.h"
-#include<unistd.h> //for usleep
 
-using namespace exploringBB;
 using namespace std;
 using namespace cgicc;
+using namespace exploringBB;
 
 int main(){
-   GPIO LED(46);
+   GPIO LED(60);
    LED.setDirection(OUTPUT); //using the GPIO class, setting it as the input
    Cgicc form; 
    string cmd;                      // the Set LED command
+   string numOfBlink;
    // get the state of the form that was submitted - script calls itself
    bool isStatus = form.queryCheckbox("status");
    form_iterator it = form.getElement("cmd");  // the radio command
@@ -24,9 +25,17 @@ int main(){
       cmd = "off";                     // if it is invalid use "off"
    }
    else { cmd = it->getValue(); }      // otherwise use submitted value
-   char *value = getenv("REMOTE_ADDR");    // The remote IP address
+   
+   form_iterator inum = form.getElement("numOfBlink");  // the radio command
+   if (inum == form.getElements().end() || inum->getValue()==""){
+      cmd = "off";                     // if it is invalid turn LED off
+   }
+   else {numOfBlink = inum->getValue();}
+    
+   //char *value = getenv("REMOTE_ADDR");    // The remote IP address
  
    // generate the form but use states that are set in the submitted form
+  
    cout << HTTPHTMLHeader() << endl;       // Generate the HTML form
    cout << html() << head() << title("LED Example") << head() << endl;
    cout << body() << h1("CPE 422/522 Project: Post LED Example") << endl;
@@ -44,14 +53,18 @@ int main(){
    cout << " name=\"numOfBlink\"value=\"\" </div></form>";
  
    // process the form data to change the LED state
+ 
    if (cmd=="on"){
 	LED.setValue(HIGH);              // turn on
+   	cout << cmd << endl;	
    }
    else if (cmd=="off") {
 	LED.setValue(LOW);        // turn off
+
    }
    else if (cmd=="blink"){
-  	for (int i=0; i<5; i++){
+	 int blink=stoi(numOfBlink);
+  	for (int i=0; i<blink; i++){
 		LED.setValue(HIGH);
 		usleep(500000); //micro-second sleep 0.5 seconds
 		LED.setValue(LOW); 
@@ -59,7 +72,7 @@ int main(){
 	}
    }
    else cout << "<div> Invalid command! </div>";        // not possible
-   cout << "<div> The CGI REMOTE_ADDR value is " << value << "</div>";
+   //cout << "<div> The CGI REMOTE_ADDR value is " << value << "</div>";
    cout << body() << html();
    return 0;
 }

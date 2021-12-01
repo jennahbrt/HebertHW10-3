@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Building myLed.cpp" 
  
-g++ GPIO.cpp myLed.cpp -o myLed -pthread -lcgicc
+g++ GPIO.cpp myLed.cpp -o myLed.cgi -lcgicc -pthread
 echo "Build complete"
 
