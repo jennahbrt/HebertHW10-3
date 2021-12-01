@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Building myLed.cpp" 
+ 
+g++ GPIO.cpp myLed.cpp -o myLed -pthread -lcgicc
+echo "Build complete"
+

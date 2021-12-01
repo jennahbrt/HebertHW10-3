@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "cp_and_chmod running"
+echo "coping myLed to /usr/local/bin/"
+cp myLed /usr/local/bin/
+config-pin -a p8.16 out
+echo "coping cgi file to /usr/lib/cgi-bin"
+cp myLed.cgi /usr/lib/cgi-bin
+echo "copied"
+echo "changing persmissions"
+chmod ugo+s /usr/lib/cgi-bin/myLed.cgi
+echo "permissions changed. run script by going to 192.168.7.2:8080/cgi-bin/myLed.cgi"
+
